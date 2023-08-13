@@ -17,10 +17,10 @@ class SyncSemester extends Sync
         );
 
         Semester::query()->find($data->pluck('id'))
-        ->each(fn (Semester $semester) => $semester->schedules()->upsert(
-            Arr::get($data->firstWhere('id', $semester->id), 'schedules.data', []),
-            ['id'],
-            ['semester_id', 'parity', 'created_at', 'updated_at'],
-        ));
+            ->each(fn (Semester $semester) => $semester->schedules()->upsert(
+                Arr::get($data->firstWhere('id', $semester->id), 'schedules.data', []),
+                ['id'],
+                ['semester_id', 'parity', 'created_at', 'updated_at'],
+            ));
     }
 }

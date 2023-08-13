@@ -47,8 +47,6 @@ class User extends Authenticatable
 
     /**
      * Get all of the synchronizations for the User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function synchronizations(): HasMany
     {

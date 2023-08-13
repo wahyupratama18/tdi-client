@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Services\ActiveSemester;
-use App\Models\Attendance;
 use App\Http\Requests\StoreAttendanceRequest;
 use App\Http\Requests\UpdateAttendanceRequest;
+use App\Models\Attendance;
 use App\Models\Student;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -25,6 +25,7 @@ class AttendanceController extends Controller
     protected function total(): object
     {
         $attend = Attendance::query()->whereDate('created_at', now()->toDateString())->count();
+
         return (object) [
             'attend' => $attend,
             'absent' => $this->students() - $attend,
@@ -57,7 +58,7 @@ class AttendanceController extends Controller
     public function store(StoreAttendanceRequest $request): JsonResponse
     {
         $student = Student::query()->where('nim', $request->nim)->with('classroom')->first();
-        
+
         $attend = $student->attendances()->firstOrCreate([]);
 
         return response()->json([

@@ -16,8 +16,8 @@ class SyncLectures extends Sync
         );
 
         Lecture::query()
-        ->whereNotIn('ulid', $data->pluck('ulid'))
-        ->whereIn('schedule_id', $data->pluck('schedule_id'))
-        ->delete();
+            ->whereNotIn('ulid', $data->pluck('ulid'))
+            ->whereIn('schedule_id', $data->pluck('schedule_id'))
+            ->delete();
     }
 }

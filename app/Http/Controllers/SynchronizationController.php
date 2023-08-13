@@ -9,7 +9,6 @@ use App\Actions\Synchronization\ProcessSync;
 use App\Http\Requests\StoreSynchronizationRequest;
 use App\Http\Requests\UpdateSynchronizationRequest;
 use App\Models\Attendance;
-use App\Models\Semester;
 use App\Models\Synchronization;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -26,7 +25,7 @@ class SynchronizationController extends Controller
     public function index(Request $request): View
     {
         $attendance = Attendance::query()->count();
-        
+
         return view('sync.index', [
             'synchronizations' => collect(Synchronization::SYNC)
                 ->map(fn (string $name, string $key) => (object) [
@@ -35,11 +34,11 @@ class SynchronizationController extends Controller
                     'authorized' => $request->user()->can('create', [Synchronization::class, $key]),
                     'last' => Synchronization::query()->where('sync', $key)->latest()->first()?->created_at->translatedFormat('l, j F Y H:i:s') ?? 'N/A',
                     'api' => in_array($key, Synchronization::API),
-                    'loops' => match($key) {
+                    'loops' => match ($key) {
                         'students' => ScheduleService::classrooms($this->activeSemester())?->pluck('ulid'),
                         'attendances' => $attendance ? range(1, ceil($attendance / 100)) : [],
                         default => [],
-                    }
+                    },
                 ])->values(),
         ]);
     }
@@ -61,12 +60,12 @@ class SynchronizationController extends Controller
             LaunchTDI::class,
             ProcessSync::class,
         ])
-        ->thenReturn();
+            ->thenReturn();
 
         $sync = $request->user()->synchronizations()
-        ->create([
-            'sync' => $request->sync,
-        ]);
+            ->create([
+                'sync' => $request->sync,
+            ]);
 
         return response()->json([
             'message' => 'Synchronization successful!',
@@ -74,7 +73,7 @@ class SynchronizationController extends Controller
         ]);
     }
 
-    protected function replacement(string $sync, ?string $id = null): string
+    protected function replacement(string $sync, string $id = null): string
     {
         $route = Synchronization::ROUTES[$sync];
 

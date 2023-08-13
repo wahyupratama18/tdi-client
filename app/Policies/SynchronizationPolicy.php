@@ -35,8 +35,8 @@ class SynchronizationPolicy
     protected function authorizeActiveSync(string $sync): bool
     {
         return Semester::query()->active()
-        ->when(in_array($sync, Synchronization::API), fn ($query) => $query->has('schedules.classrooms'))
-        ->exists();
+            ->when(in_array($sync, Synchronization::API), fn ($query) => $query->has('schedules.classrooms'))
+            ->exists();
     }
 
     /**

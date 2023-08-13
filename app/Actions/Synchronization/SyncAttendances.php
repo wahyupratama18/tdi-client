@@ -3,7 +3,6 @@
 namespace App\Actions\Synchronization;
 
 use App\Models\Attendance;
-use App\Models\Student;
 use Illuminate\Support\Collection;
 
 class SyncAttendances extends Sync

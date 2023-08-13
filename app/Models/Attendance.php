@@ -12,8 +12,6 @@ class Attendance extends Model
 
     /**
      * Get the student that owns the Attendance
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function student(): BelongsTo
     {

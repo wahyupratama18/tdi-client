@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 
 abstract class Sync
 {
-    public function handle(array $json = [], Closure $next)
+    public function handle(array $json, Closure $next)
     {
         $this->store(collect($json['data'] ?? []));
 
@@ -16,6 +16,6 @@ abstract class Sync
 
     protected function store(Collection $data): void
     {
-        # code...
+        // code...
     }
 }

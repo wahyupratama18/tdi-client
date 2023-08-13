@@ -37,7 +37,7 @@ class AuthController extends Controller
         return is_array($http->json());
     }
 
-    protected function login(Response $http, string $token, ?User $previous = null)
+    protected function login(Response $http, string $token, User $previous = null)
     {
         Auth::login(
             User::updateOrCreate(

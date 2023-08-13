@@ -16,8 +16,8 @@ class SyncStudents extends Sync
         );
 
         Student::query()
-        ->whereNotIn('nim', $data->pluck('nim'))
-        ->where('classroom_id', $data->first()['classroom_id'])
-        ->delete();
+            ->whereNotIn('nim', $data->pluck('nim'))
+            ->where('classroom_id', $data->first()['classroom_id'])
+            ->delete();
     }
 }
