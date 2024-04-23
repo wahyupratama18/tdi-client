@@ -9,6 +9,7 @@ use App\Models\Attendance;
 use App\Models\Student;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class AttendanceController extends Controller
@@ -37,7 +38,7 @@ class AttendanceController extends Controller
      */
     public function index(): View
     {
-        $this->authorize('create', Attendance::class);
+        Gate::authorize('create', Attendance::class);
 
         return view('attendance.index', [
             'total' => $this->total(),

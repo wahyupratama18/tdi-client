@@ -73,7 +73,7 @@ class SynchronizationController extends Controller
         ]);
     }
 
-    protected function replacement(string $sync, string $id = null): string
+    protected function replacement(string $sync, ?string $id = null): string
     {
         $route = Synchronization::ROUTES[$sync];
 

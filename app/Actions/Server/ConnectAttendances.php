@@ -12,7 +12,7 @@ class ConnectAttendances extends Launcher
     public function launch(): Response
     {
         return $this->connect()->post(
-            tdiRoute($this->replaceURL()),
+            TDIConnection::path($this->replaceURL()),
             [
                 'attendances' => Attendance::query()
                     ->with('student')

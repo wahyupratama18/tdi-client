@@ -10,6 +10,8 @@ class ConnectClassrooms extends Launcher
 
     public function launch(): Response
     {
-        return $this->connect()->get(tdiRoute($this->replaceURL()));
+        return $this->connect()->get(
+            TDIConnection::path($this->replaceURL())
+        );
     }
 }
