@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Classroom::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('nim')->unique();
+            $table->string('qr')->unique();
             $table->string('name');
             $table->timestamps();
         });

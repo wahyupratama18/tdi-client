@@ -24,7 +24,7 @@
                     submit() {
                         if (this.scanned.length == 12) {
                             axios.post('{{ route('attendance.store') }}', {
-                                nim: this.scanned,
+                                qr: this.scanned,
                             }).then(response => {
                                 console.log(response.data)
                                 this.scanned = ''
@@ -38,7 +38,7 @@
                             })
                         } else {
                             iziToast.error({
-                                message: 'NIM tidak valid',
+                                message: 'QR tidak valid',
                                 position: 'topRight'
                             })
                         }
@@ -96,7 +96,7 @@
 
                     <div class="col-span-3">
                         <div class="grid grid-cols-4 gap-6">
-                            <x-input type="number" class="col-span-3" x-model="scanned" placeholder="NIM" wire:keydown.enter="submit()" />
+                            <x-input type="text" class="col-span-3" x-model="scanned" placeholder="qr" wire:keydown.enter="submit()" />
 
                             <x-button type="button" @click="submit()">Submit</x-button>
                         </div>
@@ -116,7 +116,7 @@
                                     <h1>
                                         <i class="mdi mdi-close"></i> Absensi gagal
                                     </h1>
-                                    <h2>Periksa kembali NIM yang anda scan</h2>
+                                    <h2>Periksa kembali peserta yang bersangkutan</h2>
                                 </div>
                             </template>
                             <template x-if="status != true && status != 'not found'">
@@ -126,13 +126,13 @@
                                     </h1>
                                     
                                     <h2>
-                                        NIM telah melakukan absensi sebelumnya pada <span x-text="status"></span>
+                                        Peserta telah melakukan absensi sebelumnya pada <span x-text="status"></span>
                                     </h2>
                                 </div>
                             </template>
                         </div>
 
-                        <div class="bg-white rounded-lg mt-4 shadow-lg">
+                        <div class="bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 rounded-lg mt-4 shadow-lg">
                             <div class="grid grid-cols-3 p-6">
                                 <div class="col-span-2">
                                     <div class="mb-4">
@@ -159,16 +159,16 @@
                         </div>
                     </div>
                     <div>
-                        <h4 class="mb-4">Rekap absensi</h4>
+                        <h4 class="mb-4 font-bold text-xl text-gray-900 dark:text-gray-100">Rekap absensi</h4>
 
                         <div class="grid grid-cols-2 divide-x">
                             <div>
-                                <h5>Hadir</h5>
-                                <h6 class="font-semibold" x-text="total.attend"></h6>
+                                <h5 class="text-gray-700 dark:text-gray-200">Hadir</h5>
+                                <h6 class="font-semibold text-gray-800 dark:text-gray-100" x-text="total.attend"></h6>
                             </div>
                             <div class="pl-5">
-                                <h5>Belum</h5>
-                                <h6 class="font-semibold" x-text="total.absent"></h6>
+                                <h5 class="text-gray-700 dark:text-gray-200">Belum</h5>
+                                <h6 class="font-semibold text-gray-800 dark:text-gray-100" x-text="total.absent"></h6>
                             </div>
                         </div>
                     </div>

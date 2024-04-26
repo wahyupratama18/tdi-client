@@ -58,7 +58,7 @@ class AttendanceController extends Controller
      */
     public function store(StoreAttendanceRequest $request): JsonResponse
     {
-        $student = Student::query()->where('nim', $request->nim)->with('classroom')->first();
+        $student = Student::query()->where('qr', $request->qr)->with('classroom')->first();
 
         $attend = $student->attendances()->firstOrCreate([]);
 

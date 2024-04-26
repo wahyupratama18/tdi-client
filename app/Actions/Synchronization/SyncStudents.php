@@ -11,7 +11,7 @@ class SyncStudents extends Sync
     {
         Student::query()->upsert(
             $data->toArray(),
-            ['nim'],
+            ['nim', 'qr'],
             ['classroom_id', 'name', 'created_at', 'updated_at'],
         );
 

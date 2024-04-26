@@ -25,7 +25,8 @@ class StoreAttendanceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nim' => ['required', 'string', Rule::exists(Student::class)],
+            // 'nim' => ['required', 'string', Rule::exists(Student::class, 'nim')],
+            'qr' => ['required', 'string', Rule::exists(Student::class, 'qr')],
         ];
     }
 }

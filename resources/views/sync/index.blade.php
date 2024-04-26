@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Synchronization tools') }}
         </h2>
     </x-slot>
@@ -104,7 +104,7 @@
                                     <x-button @click="startSync()" ::disabled="start">Sinkronisasi</x-button>
                                     @endif
 
-                                    @if ($sync->api)
+                                    @if ($api)
                                     <div class="bg-slate-500 mt-3 transition-all rounded-lg text-center" :class="{
                                         'hidden': ! start,
                                     }">

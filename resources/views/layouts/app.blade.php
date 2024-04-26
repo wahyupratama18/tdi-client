@@ -9,14 +9,20 @@
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/7.2.96/css/materialdesignicons.min.css">
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        <!-- Styles -->
+        @livewireStyles
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            <livewire:layout.navigation />
+        <x-banner />
+
+        <div class="min-h-screen bg-gray-100 dark:bg-gray-700">
+            @livewire('navigation-menu')
 
             <!-- Page Heading -->
             @if (isset($header))
@@ -33,11 +39,26 @@
             </main>
         </div>
 
+        @stack('modals')
+
+        @livewireScripts
+
         @if (session('success'))
             <script>
                 window.addEventListener('load', function () {
                     iziToast.success({
                         title: '{{ session('success') }}',
+                        position: 'topRight',
+                    })
+                })
+            </script>
+        @endif
+
+        @if (session('error'))
+            <script>
+                window.addEventListener('load', function () {
+                    iziToast.error({
+                        title: '{{ session('error') }}',
                         position: 'topRight',
                     })
                 })

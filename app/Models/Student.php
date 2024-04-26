@@ -13,6 +13,7 @@ class Student extends Model
 
     protected $fillable = [
         'nim',
+        'qr',
         'name',
         'classroom_id',
     ];
