@@ -6,6 +6,7 @@ use App\Actions\Services\ActiveSemester;
 use App\Http\Requests\StoreAttendanceRequest;
 use App\Http\Requests\UpdateAttendanceRequest;
 use App\Models\Attendance;
+use App\Models\Lecture;
 use App\Models\Student;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -16,20 +17,24 @@ class AttendanceController extends Controller
 {
     use ActiveSemester;
 
-    protected function students(): int
+    protected function totalStudents(): int
     {
-        return $this->activeSemester()->load(
-            ['schedules.classrooms' => fn ($query) => $query->withCount('students')]
-        )->schedules->pluck('classrooms')->flatten()->sum('students_count');
+        return $this->activeSemester()->load([
+            'schedules' => fn ($query) => $query
+                ->whereHas('lectures', fn ($query) => $query->whereDate('date', now()->toDateString()))
+                ->with(['classrooms' => fn ($query) => $query->withCount('students')]),
+        ])->schedules->pluck('classrooms')->flatten()->sum('students_count');
     }
 
     protected function total(): object
     {
-        $attend = Attendance::query()->whereDate('created_at', now()->toDateString())->count();
+        $attend = Attendance::query()
+            ->whereDate('created_at', now()->toDateString())
+            ->count();
 
         return (object) [
             'attend' => $attend,
-            'absent' => $this->students() - $attend,
+            'absent' => $this->totalStudents() - $attend,
         ];
     }
 
@@ -58,7 +63,10 @@ class AttendanceController extends Controller
      */
     public function store(StoreAttendanceRequest $request): JsonResponse
     {
-        $student = Student::query()->where('qr', $request->qr)->with('classroom')->first();
+        $student = Student::query()
+            ->where('qr', $request->qr)
+            ->with('classroom')
+            ->first();
 
         $attend = $student->attendances()->firstOrCreate([]);
 
@@ -76,15 +84,15 @@ class AttendanceController extends Controller
 
     protected function timeLeft(Carbon $created): string
     {
-        $compare = now()->greaterThan(env('MIN_HOME'));
+        $lecture = Lecture::query()
+            ->whereDate('date', now()->toDateString())
+            ->first();
 
-        if ($compare) {
-            return Carbon::parse(env('MIN_HOME'))->timespan($created);
-        }
-
-        $attend = Carbon::parse(env('MAX_ATTENDANCE'));
-
-        return ($attend->greaterThan($created) ? ' ' : '- ').$attend->timespan($created);
+        return match (now()->greaterThan($lecture->home_time)) {
+            true => $lecture->home_time->timespan($created),
+            false => ($lecture->attend_time->greaterThan($created) ? ' ' : '- ').
+            $lecture->attend_time->timespan($created),
+        };
     }
 
     /**

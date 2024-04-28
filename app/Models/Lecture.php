@@ -16,10 +16,14 @@ class Lecture extends Model
         // 'order',
         'schedule_id',
         'date',
+        'attend_time',
+        'home_time',
     ];
 
     protected $casts = [
         'date' => 'date',
+        'attend_time' => 'datetime',
+        'home_time' => 'datetime',
     ];
 
     /**

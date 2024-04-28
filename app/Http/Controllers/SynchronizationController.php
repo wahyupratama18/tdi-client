@@ -59,8 +59,7 @@ class SynchronizationController extends Controller
         Pipeline::send($request)->through([
             LaunchTDI::class,
             ProcessSync::class,
-        ])
-            ->thenReturn();
+        ])->thenReturn();
 
         $sync = $request->user()->synchronizations()
             ->create([

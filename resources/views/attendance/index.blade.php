@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-white leading-tight">
             {{ __('Attendance') }}
         </h2>
     </x-slot>
@@ -107,14 +107,14 @@
                         }" x-show="status">
                             <template x-if="status == true">
                                 <h1>
-                                    <i class="mdi mdi-check"></i> Absensi berhasil
+                                    <i class="mdi mdi-check"></i> Presensi berhasil
                                 </h1>
                             </template>
 
                             <template x-if="status == 'not found'">
                                 <div>
                                     <h1>
-                                        <i class="mdi mdi-close"></i> Absensi gagal
+                                        <i class="mdi mdi-close"></i> Presensi gagal
                                     </h1>
                                     <h2>Periksa kembali peserta yang bersangkutan</h2>
                                 </div>
@@ -122,11 +122,11 @@
                             <template x-if="status != true && status != 'not found'">
                                 <div>
                                     <h1>
-                                        <i class="mdi mdi-close"></i> Absensi gagal
+                                        <i class="mdi mdi-close"></i> Presensi gagal
                                     </h1>
                                     
                                     <h2>
-                                        Peserta telah melakukan absensi sebelumnya pada <span x-text="status"></span>
+                                        Peserta telah melakukan presensi sebelumnya pada <span x-text="status"></span>
                                     </h2>
                                 </div>
                             </template>
@@ -159,7 +159,7 @@
                         </div>
                     </div>
                     <div>
-                        <h4 class="mb-4 font-bold text-xl text-gray-900 dark:text-gray-100">Rekap absensi</h4>
+                        <h4 class="mb-4 font-bold text-xl text-gray-900 dark:text-gray-100">Rekap Presensi</h4>
 
                         <div class="grid grid-cols-2 divide-x">
                             <div>

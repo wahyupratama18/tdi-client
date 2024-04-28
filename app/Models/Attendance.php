@@ -10,6 +10,11 @@ class Attendance extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'attend_time' => 'timestamp',
+        'home_time' => 'timestamp',
+    ];
+
     /**
      * Get the student that owns the Attendance
      */
