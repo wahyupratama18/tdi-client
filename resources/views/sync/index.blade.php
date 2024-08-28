@@ -11,7 +11,7 @@
                 @can('create', \App\Models\Classroom::class)
                 <div class="flex justify-end mb-4">
                     <a href="{{ route('semester.classroom.create', $semester) }}">
-                        <x-button>Add</x-button>
+                        <x-button>{{ __('Add') }}</x-button>
                     </a>
                 </div>
                 @endcan
@@ -21,17 +21,18 @@
                         <thead class="bg-gray-50 dark:bg-gray-800">
                             <tr>
                                 <th scope="col" class="px-12 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                    No
+                                    {{ __('#') }}
                                 </th>
                                 <th scope="col" class="px-12 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                    Sinkronisasi
+                                    {{ __('Synchronization') }}
                                 </th>
                                 <th scope="col" class="px-12 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                    Terakhir
+                                    {{ __('Last Updated') }}
                                 </th>
                                 <th scope="col" class="px-12 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                    Options
+                                    {{ __('Options') }}
                                 </th>
+                            </tr>
                             </tr>
                         </thead>
 

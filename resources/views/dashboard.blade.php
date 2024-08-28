@@ -10,7 +10,7 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="p-6 lg:p-8">
                     <h1 class="text-2xl font-medium text-gray-900 dark:text-white">
-                        Selamat datang di menu administrasi TDI
+                        {{ __('Welcome to the TDI administration menu') }}
                     </h1>
                 </div>
                 {{-- <x-welcome /> --}}

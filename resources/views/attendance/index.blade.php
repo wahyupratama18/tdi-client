@@ -34,7 +34,6 @@
                             }).catch(response => {
                                 this.scanned = ''
                                 this.status = 'not found'
-
                             })
                         } else {
                             iziToast.error({
@@ -79,26 +78,26 @@
                         <video src="" x-ref="scanner"></video>
                         
                         <div class="my-4">
-                            <x-button class="w-full" @click="options = !options">Custom options</x-button>
+                            <x-button class="w-full" @click="options = !options">{{ __('Custom options') }}</x-button>
                         </div>
                         
                         <div x-show="options">
                             
                             <div class="my-4 flex flex-col gap-4">
-                                <x-button @click="qrScanner.start().then(() => camLists())">Start</x-button>
+                                <x-button @click="qrScanner.start().then(() => camLists())">{{ __('Start') }}</x-button>
                                 <x-button @click="qrScanner.stop()">Stop</x-button>
                             </div>
 
-                            <x-label>Gunakan kamera:</x-label>
+                            <x-label>{{ __('Use Camera:') }}</x-label>
                             <x-select class="w-full" x-model="cam" x-ref="listCameras" @change="qrScanner.setCamera(cam)" />
                         </div>
                     </div>
 
                     <div class="col-span-3">
                         <div class="grid grid-cols-4 gap-6">
-                            <x-input type="text" class="col-span-3" x-model="scanned" placeholder="qr" wire:keydown.enter="submit()" />
+                            <x-input type="text" class="col-span-3" x-model="scanned" placeholder="{{ __('qr') }}" wire:keydown.enter="submit()" />
 
-                            <x-button type="button" @click="submit()">Submit</x-button>
+                            <x-button type="button" @click="submit()">{{ __('Submit') }}</x-button>
                         </div>
 
                         <div class="text-white p-3 my-4 rounded-lg" :class="{
@@ -107,26 +106,26 @@
                         }" x-show="status">
                             <template x-if="status == true">
                                 <h1>
-                                    <i class="mdi mdi-check"></i> Presensi berhasil
+                                    <i class="mdi mdi-check"></i> {{ __('Attendance successful') }}
                                 </h1>
                             </template>
 
                             <template x-if="status == 'not found'">
                                 <div>
                                     <h1>
-                                        <i class="mdi mdi-close"></i> Presensi gagal
+                                        <i class="mdi mdi-close"></i> {{ __('Attendance failed') }}
                                     </h1>
-                                    <h2>Periksa kembali peserta yang bersangkutan</h2>
+                                    <h2>{{ __('Please check the participant again') }}</h2>
                                 </div>
                             </template>
                             <template x-if="status != true && status != 'not found'">
                                 <div>
                                     <h1>
-                                        <i class="mdi mdi-close"></i> Presensi gagal
+                                        <i class="mdi mdi-close"></i> {{ __('Attendance failed') }}
                                     </h1>
                                     
                                     <h2>
-                                        Peserta telah melakukan presensi sebelumnya pada <span x-text="status"></span>
+                                        {{ __('Participant has already attended on') }} <span x-text="status"></span>
                                     </h2>
                                 </div>
                             </template>
@@ -136,38 +135,38 @@
                             <div class="grid grid-cols-3 p-6">
                                 <div class="col-span-2">
                                     <div class="mb-4">
-                                        <h4>NIM</h4>
+                                        <h4>{{ __('Student ID') }}</h4>
                                         <h5 class="font-semibold" x-text="student.nim"></h5>
                                     </div>
     
                                     <div class="mb-4">
-                                        <h4>Nama</h4>
+                                        <h4>{{ __('Name') }}</h4>
                                         <h5 class="font-semibold" x-text="student.name"></h5>
                                     </div>
                                 </div>
                                 
                                 <div>
-                                    <h4>Classroom</h4>
+                                    <h4>{{ __('Classroom') }}</h4>
                                     <h5 class="font-semibold text-xl" x-text="student.classroom"></h5>
                                 </div>
                             </div>
 
                             <div class="my-4 bg-blue-400 text-white rounded-tr-xl p-6 w-max">
-                                <h4>Attendance time</h4>
+                                <h4>{{ __('Attendance time') }}</h4>
                                 <h5 class="font-semibold text-xl" x-text="student.timeLeft"></h5>
                             </div>
                         </div>
                     </div>
                     <div>
-                        <h4 class="mb-4 font-bold text-xl text-gray-900 dark:text-gray-100">Rekap Presensi</h4>
+                        <h4 class="mb-4 font-bold text-xl text-gray-900 dark:text-gray-100">{{ __('Attendance Summary') }}</h4>
 
                         <div class="grid grid-cols-2 divide-x">
                             <div>
-                                <h5 class="text-gray-700 dark:text-gray-200">Hadir</h5>
+                                <h5 class="text-gray-700 dark:text-gray-200">{{ __('Present') }}</h5>
                                 <h6 class="font-semibold text-gray-800 dark:text-gray-100" x-text="total.attend"></h6>
                             </div>
                             <div class="pl-5">
-                                <h5 class="text-gray-700 dark:text-gray-200">Belum</h5>
+                                <h5 class="text-gray-700 dark:text-gray-200">{{ __('Absent') }}</h5>
                                 <h6 class="font-semibold text-gray-800 dark:text-gray-100" x-text="total.absent"></h6>
                             </div>
                         </div>

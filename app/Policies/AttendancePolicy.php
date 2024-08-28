@@ -29,7 +29,9 @@ class AttendancePolicy
      */
     public function create(User $user): bool
     {
-        return Lecture::query()->whereDate('date', now()->toDateString())->exists();
+        $lecture = Lecture::query()->whereDate('date', now()->toDateString())->first();
+
+        return $lecture && $lecture->attend_opened_at->lte(now()) && $lecture->attend_closed_at->gte(now());
     }
 
     /**
