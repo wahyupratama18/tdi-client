@@ -12,9 +12,7 @@ abstract class Launcher implements LaunchInterface
 
     protected string $sync;
 
-    public function __construct(protected $id = null)
-    {
-    }
+    public function __construct(protected $id = null) {}
 
     protected function connect(): PendingRequest
     {

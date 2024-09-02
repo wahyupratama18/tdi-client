@@ -5,7 +5,7 @@ namespace App\Actions\Synchronization;
 use Closure;
 use Illuminate\Support\Collection;
 
-abstract class Sync
+abstract class Sync implements Synchronizer
 {
     public function handle(array $json, Closure $next)
     {

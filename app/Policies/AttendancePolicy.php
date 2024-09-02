@@ -31,7 +31,7 @@ class AttendancePolicy
     {
         $lecture = Lecture::query()->whereDate('date', now()->toDateString())->first();
 
-        return $lecture && $lecture->attend_opened_at->lte(now()) && $lecture->attend_closed_at->gte(now());
+        return $lecture && $lecture->attend_opened_at->lte(now()) && $lecture->home_closed_at->gte(now());
     }
 
     /**

@@ -63,10 +63,11 @@ class AttendanceController extends Controller
      */
     public function store(StoreAttendanceRequest $request): JsonResponse
     {
-        $student = Student::query()
+        $student = cache()->remember('student_'.$request->qr, 86400, fn () => Student::query()
             ->where('qr', $request->qr)
             ->with('classroom')
-            ->first();
+            ->first()
+        );
 
         $attend = $student->attendances()->firstOrCreate([]);
 
@@ -84,9 +85,10 @@ class AttendanceController extends Controller
 
     protected function timeLeft(Carbon $created): string
     {
-        $lecture = Lecture::query()
+        $lecture = cache()->remember('lecture', 3600, fn () => Lecture::query()
             ->whereDate('date', now()->toDateString())
-            ->first();
+            ->first()
+        );
 
         return match (now()->greaterThan($lecture->home_time)) {
             true => $lecture->home_time->timespan($created),

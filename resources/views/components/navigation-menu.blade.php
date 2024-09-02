@@ -20,9 +20,11 @@
                         {{ __('Synchronization') }}
                     </x-nav-link>
 
-                    <x-nav-link href="{{ route('attendance.index') }}" :active="request()->routeIs('attendance.index')">
-                        {{ __('Attendance') }}
-                    </x-nav-link>
+                    @if($attendance = Gate::allows('create', App\Models\Attendance::class))
+                        <x-nav-link href="{{ route('attendance.index') }}" :active="request()->routeIs('attendance.index')">
+                            {{ __('Attendance') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -98,9 +100,11 @@
                 {{ __('Synchronization') }}
             </x-responsive-nav-link>
 
+            @if($attendance)
             <x-responsive-nav-link href="{{ route('attendance.index') }}" :active="request()->routeIs('attendance.index')">
                 {{ __('Attendance') }}
             </x-responsive-nav-link>
+            @endif
 
             {{-- <x-responsive-nav-link href="{{ route('semester.index') }}" :active="request()->routeIs(['semester.index', 'semester.create', 'semester.edit'])">
                 {{ __('Semester') }}
