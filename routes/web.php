@@ -20,7 +20,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('dashboard', fn () => view('dashboard'))->name('dashboard');
 
-    Route::resource('synchronizations', SynchronizationController::class)->only(['index', 'store', 'update']);
+    Route::resource('synchronizations', SynchronizationController::class)->only(['index', 'store']);
 
     Route::resource('attendance', AttendanceController::class)->only(['index', 'store']);
 

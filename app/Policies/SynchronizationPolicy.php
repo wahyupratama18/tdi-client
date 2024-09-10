@@ -2,9 +2,11 @@
 
 namespace App\Policies;
 
+use App\Enums\SyncList;
 use App\Models\Semester;
 use App\Models\Synchronization;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 
 class SynchronizationPolicy
 {
@@ -27,16 +29,20 @@ class SynchronizationPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user, string $sync): bool
+    public function create(User $user, ?SyncList $sync): bool
     {
-        return $sync == 'semester' ? true : $this->authorizeActiveSync($sync);
+        return $sync && $sync == SyncList::SEMESTER ? true : $this->authorizeActiveSync($sync);
     }
 
-    protected function authorizeActiveSync(string $sync): bool
+    protected function authorizeActiveSync(SyncList $sync): bool
     {
-        return Semester::query()->active()
-            ->when(in_array($sync, Synchronization::API), fn ($query) => $query->has('schedules.classrooms'))
-            ->exists();
+        return cache()->remember(
+            'active_sync_'.$sync->name,
+            60,
+            fn () => Semester::query()->active()
+                ->when($sync->apiLoops(), fn (Builder $query) => $query->has('schedules.classrooms'))
+                ->exists()
+        );
     }
 
     /**

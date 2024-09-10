@@ -6,6 +6,7 @@ use App\Actions\Server\LaunchTDI;
 use App\Actions\Services\ActiveSemester;
 use App\Actions\Services\ScheduleService;
 use App\Actions\Synchronization\ProcessSync;
+use App\Enums\SyncList;
 use App\Http\Requests\StoreSynchronizationRequest;
 use App\Http\Requests\UpdateSynchronizationRequest;
 use App\Models\Attendance;
@@ -26,20 +27,25 @@ class SynchronizationController extends Controller
     {
         $attendance = Attendance::query()->count();
 
+        $latestSyncs = Synchronization::query()
+            ->whereIn('id', Synchronization::selectRaw('MAX(id) as id')->groupBy('sync')->pluck('id'))
+            ->get();
+
+        $activeSemester = $this->activeSemester();
+
         return view('sync.index', [
-            'synchronizations' => collect(Synchronization::SYNC)
-                ->map(fn (string $name, string $key) => (object) [
-                    'sync' => $key,
-                    'name' => $name,
-                    'authorized' => $request->user()->can('create', [Synchronization::class, $key]),
-                    'last' => Synchronization::query()->where('sync', $key)->latest()->first()?->created_at->translatedFormat('l, j F Y H:i:s') ?? 'N/A',
-                    'api' => in_array($key, Synchronization::API),
-                    'loops' => match ($key) {
-                        'students' => ScheduleService::classrooms($this->activeSemester())?->pluck('ulid'),
-                        'attendances' => $attendance ? range(1, ceil($attendance / 100)) : [],
-                        default => [],
-                    },
-                ])->values(),
+            'synchronizations' => collect(SyncList::cases())->map(fn (SyncList $sync) => (object) [
+                'sync' => $sync->value,
+                'name' => $sync->read(),
+                'authorized' => $request->user()->can('create', [Synchronization::class, $sync]),
+                'last' => $latestSyncs->firstWhere('sync', $sync->lowercase())?->created_at->translatedFormat('l, j F Y H:i:s') ?? 'N/A',
+                'api' => $sync->apiLoops(),
+                'loops' => match ($sync) {
+                    SyncList::STUDENTS => ScheduleService::classrooms($activeSemester)?->pluck('ulid'),
+                    SyncList::ATTENDANCES => $attendance ? range(1, ceil($attendance / 100)) : [],
+                    default => [],
+                },
+            ])->values(),
         ]);
     }
 
@@ -62,25 +68,12 @@ class SynchronizationController extends Controller
         ])->thenReturn();
 
         $sync = $request->user()->synchronizations()
-            ->create([
-                'sync' => $request->sync,
-            ]);
+            ->create(['sync' => $request->sync]);
 
         return response()->json([
-            'message' => 'Synchronization successful!',
+            'message' => __('Synchronization successful!'),
             'sync' => $sync->created_at->translatedFormat('l, j F Y H:i:s'),
         ]);
-    }
-
-    protected function replacement(string $sync, ?string $id = null): string
-    {
-        $route = Synchronization::ROUTES[$sync];
-
-        if ($id) {
-            $route = str_replace(':id', $id, $route);
-        }
-
-        return $route;
     }
 
     /**

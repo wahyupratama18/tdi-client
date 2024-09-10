@@ -2,11 +2,12 @@
 
 namespace App\Actions\Server;
 
+use App\Enums\SyncList;
 use Illuminate\Http\Client\Response;
 
 class ConnectLectures extends Launcher
 {
-    protected string $sync = 'lectures';
+    protected SyncList $sync = SyncList::LECTURES;
 
     public function launch(): Response
     {

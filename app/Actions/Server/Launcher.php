@@ -2,7 +2,7 @@
 
 namespace App\Actions\Server;
 
-use App\Models\Synchronization;
+use App\Enums\SyncList;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 
@@ -10,7 +10,7 @@ abstract class Launcher implements LaunchInterface
 {
     protected string $token;
 
-    protected string $sync;
+    protected SyncList $sync;
 
     public function __construct(protected $id = null) {}
 
@@ -28,7 +28,7 @@ abstract class Launcher implements LaunchInterface
 
     protected function replaceURL(): string
     {
-        $route = Synchronization::ROUTES[$this->sync];
+        $route = $this->sync->apiRoute();
 
         if ($this->id) {
             $route = str_replace(':id', $this->id, $route);

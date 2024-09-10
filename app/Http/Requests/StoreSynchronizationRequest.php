@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\SyncList;
 use App\Models\Classroom;
 use App\Models\Synchronization;
 use Illuminate\Foundation\Http\FormRequest;
@@ -14,7 +15,7 @@ class StoreSynchronizationRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('create', [Synchronization::class, $this->sync]);
+        return $this->user()->can('create', [Synchronization::class, SyncList::tryFrom($this->sync)]);
     }
 
     /**
@@ -25,7 +26,7 @@ class StoreSynchronizationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'sync' => ['required', 'string', Rule::in(array_keys(Synchronization::SYNC))],
+            'sync' => ['required', 'string', Rule::in(SyncList::cases())],
             'id' => ['required_if:sync,students', 'nullable', Rule::exists(Classroom::class)],
         ];
     }

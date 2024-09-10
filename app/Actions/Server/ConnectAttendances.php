@@ -2,12 +2,13 @@
 
 namespace App\Actions\Server;
 
+use App\Enums\SyncList;
 use App\Models\Attendance;
 use Illuminate\Http\Client\Response;
 
 class ConnectAttendances extends Launcher
 {
-    protected string $sync = 'attendances';
+    protected SyncList $sync = SyncList::ATTENDANCES;
 
     public function launch(): Response
     {
