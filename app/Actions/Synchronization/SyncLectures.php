@@ -12,7 +12,7 @@ class SyncLectures extends Sync
         Lecture::query()->upsert(
             $data->toArray(),
             ['ulid'],
-            ['order', 'date', 'schedule_id', 'attend_opened_at', 'attend_time', 'home_time', 'home_closed_at', 'created_at', 'updated_at'],
+            ['order', 'date', 'schedule_id', 'attend_opened_at', 'attend_time', 'home_time', 'home_closed_at', 'created_at', 'updated_at', 'location'],
         );
 
         Lecture::query()

@@ -20,6 +20,7 @@
                         name: '-',
                         classroom: '-',
                         timeLeft: '-',
+                        site: '-',
                     },
                     submit() {
                         if (this.scanned.length == 12) {
@@ -33,11 +34,11 @@
                                 this.status = response.data.status
                             }).catch(response => {
                                 this.scanned = ''
-                                this.status = 'not found'
+                                this.status = '{{ __('Not Found') }}'
                             })
                         } else {
                             iziToast.error({
-                                message: 'QR tidak valid',
+                                message: '{{ __('QR invalid') }}',
                                 position: 'topRight'
                             })
                         }
@@ -54,7 +55,7 @@
                     if (scanned != result.data) {
                         scanned = result.data;
 
-                        let audio = new Audio('beep.mp3')
+                        let audio = new Audio('{{ asset('beep.mp3')}}')
                         audio.loop = false
                         audio.play()
 
@@ -78,17 +79,29 @@
                         <video src="" x-ref="scanner"></video>
                         
                         <div class="my-4">
-                            <x-button class="w-full" @click="options = !options">{{ __('Custom options') }}</x-button>
+                            <x-button class="w-full" @click="options = !options">
+                                <i class="mdi mdi-cog"></i>
+                                {{ __('Custom options') }}
+                            </x-button>
                         </div>
                         
                         <div x-show="options">
                             
                             <div class="my-4 flex flex-col gap-4">
-                                <x-button @click="qrScanner.start().then(() => camLists())">{{ __('Start') }}</x-button>
-                                <x-button @click="qrScanner.stop()">Stop</x-button>
+                                <x-button @click="qrScanner.start().then(() => camLists())">
+                                    <i class="mdi mdi-camera"></i>
+                                    {{ __('Start') }}
+                                </x-button>
+                                <x-button @click="qrScanner.stop()">
+                                    <i class="mdi mdi-camera-off"></i>
+                                    {{ __('Stop') }}
+                                </x-button>
                             </div>
 
-                            <x-label>{{ __('Use Camera:') }}</x-label>
+                            <x-label>
+                                <i class="mdi mdi-camera"></i>
+                                {{ __('Use Camera:') }}
+                            </x-label>
                             <x-select class="w-full" x-model="cam" x-ref="listCameras" @change="qrScanner.setCamera(cam)" />
                         </div>
                     </div>
@@ -97,7 +110,10 @@
                         <div class="grid grid-cols-4 gap-6">
                             <x-input type="text" class="col-span-3" x-model="scanned" placeholder="{{ __('qr') }}" wire:keydown.enter="submit()" />
 
-                            <x-button type="button" @click="submit()">{{ __('Submit') }}</x-button>
+                            <x-button type="button" @click="submit()">
+                                <i class="mdi mdi-check"></i>
+                                {{ __('Submit') }}
+                            </x-button>
                         </div>
 
                         <div class="text-white p-3 my-4 rounded-lg" :class="{
@@ -132,22 +148,25 @@
                         </div>
 
                         <div class="bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 rounded-lg mt-4 shadow-lg">
-                            <div class="grid grid-cols-3 p-6">
-                                <div class="col-span-2">
-                                    <div class="mb-4">
-                                        <h4>{{ __('Student ID') }}</h4>
-                                        <h5 class="font-semibold" x-text="student.nim"></h5>
-                                    </div>
-    
-                                    <div class="mb-4">
-                                        <h4>{{ __('Name') }}</h4>
-                                        <h5 class="font-semibold" x-text="student.name"></h5>
-                                    </div>
+                            <div class="grid grid-cols-2 p-6">
+                                <div class="mb-4">
+                                    <h4>{{ __('Student ID') }}</h4>
+                                    <h5 class="font-semibold" x-text="student.nim"></h5>
+                                </div>
+
+                                <div class="mb-4">
+                                    <h4>{{ __('Name') }}</h4>
+                                    <h5 class="font-semibold" x-text="student.name"></h5>
                                 </div>
                                 
                                 <div>
                                     <h4>{{ __('Classroom') }}</h4>
                                     <h5 class="font-semibold text-xl" x-text="student.classroom"></h5>
+                                </div>
+                                
+                                <div>
+                                    <h4>{{ __('Site') }}</h4>
+                                    <h5 class="font-semibold text-xl" x-text="student.site"></h5>
                                 </div>
                             </div>
 

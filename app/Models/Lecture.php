@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\CampusSite;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,13 +23,17 @@ class Lecture extends Model
         'home_closed_at',
     ];
 
-    protected $casts = [
-        'date' => 'date',
-        'attend_time' => 'datetime',
-        'home_time' => 'datetime',
-        'attend_opened_at' => 'datetime',
-        'home_closed_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'date' => 'date',
+            'attend_opened_at' => 'datetime',
+            'attend_time' => 'datetime',
+            'home_time' => 'datetime',
+            'home_closed_at' => 'datetime',
+            'location' => CampusSite::class,
+        ];
+    }
 
     /**
      * Get the schedule that owns the Lecture

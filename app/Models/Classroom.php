@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\CampusSite;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,6 +16,13 @@ class Classroom extends Model
         'name',
         'schedule_id',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'location' => CampusSite::class,
+        ];
+    }
 
     /**
      * Get the semester that owns the Classroom

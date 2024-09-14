@@ -38,7 +38,7 @@ class SynchronizationPolicy
     {
         return cache()->remember(
             'active_sync_'.$sync->name,
-            60,
+            5,
             fn () => Semester::query()->active()
                 ->when($sync->apiLoops(), fn (Builder $query) => $query->has('schedules.classrooms'))
                 ->exists()

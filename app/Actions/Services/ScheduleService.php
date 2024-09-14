@@ -19,7 +19,7 @@ class ScheduleService
                 fn (Schedule $schedule) => $schedule->classrooms
                     ->map(function (Classroom $classroom) use ($schedule, $remarks) {
                         if ($remarks) {
-                            $classroom->remarks = $schedule->remarks;
+                            $classroom->remarks = $schedule->parity->name;
                         }
 
                         return $classroom;
@@ -34,7 +34,7 @@ class ScheduleService
             ->map(
                 fn (Schedule $schedule) => $schedule->lectures
                     ->map(function (Lecture $lecture) use ($schedule) {
-                        $lecture->remarks = $schedule->remarks;
+                        $lecture->remarks = $schedule->parity->name;
 
                         return $lecture;
                     })

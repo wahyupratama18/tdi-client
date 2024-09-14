@@ -17,6 +17,16 @@ class StoreAttendanceRequest extends FormRequest
         return $this->user()->can('create', Attendance::class);
     }
 
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'student' => Student::query()
+                ->where('qr', $this->qr)
+                ->with('classroom')
+                ->first(),
+        ]);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *

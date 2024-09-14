@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Attendance\Calculation;
 use App\Actions\Services\ActiveSemester;
 use App\Http\Requests\StoreAttendanceRequest;
 use App\Http\Requests\UpdateAttendanceRequest;
 use App\Models\Attendance;
-use App\Models\Lecture;
-use App\Models\Student;
-use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
@@ -16,27 +14,6 @@ use Illuminate\View\View;
 class AttendanceController extends Controller
 {
     use ActiveSemester;
-
-    protected function totalStudents(): int
-    {
-        return $this->activeSemester()->load([
-            'schedules' => fn ($query) => $query
-                ->whereHas('lectures', fn ($query) => $query->whereDate('date', now()->toDateString()))
-                ->with(['classrooms' => fn ($query) => $query->withCount('students')]),
-        ])->schedules->pluck('classrooms')->flatten()->sum('students_count');
-    }
-
-    protected function total(): object
-    {
-        $attend = Attendance::query()
-            ->whereDate('created_at', now()->toDateString())
-            ->count();
-
-        return (object) [
-            'attend' => $attend,
-            'absent' => $this->totalStudents() - $attend,
-        ];
-    }
 
     /**
      * Display a listing of the resource.
@@ -46,7 +23,7 @@ class AttendanceController extends Controller
         Gate::authorize('create', Attendance::class);
 
         return view('attendance.index', [
-            'total' => $this->total(),
+            'total' => Calculation::total(),
         ]);
     }
 
@@ -63,38 +40,19 @@ class AttendanceController extends Controller
      */
     public function store(StoreAttendanceRequest $request): JsonResponse
     {
-        $student = cache()->remember('student_'.$request->qr, 86400, fn () => Student::query()
-            ->where('qr', $request->qr)
-            ->with('classroom')
-            ->first()
-        );
-
-        $attend = $student->attendances()->firstOrCreate([]);
+        $attend = $request->student->attendances()->firstOrCreate([]);
 
         return response()->json([
             'status' => $attend->wasRecentlyCreated ? true : $attend->created_at->translatedFormat('l, j F Y H:i:s'),
             'student' => (object) [
-                'nim' => $student->nim,
-                'name' => $student->name,
-                'classroom' => $student->classroom->name,
-                'timeLeft' => $this->timeLeft($attend->created_at),
+                'nim' => $request->student->nim,
+                'name' => $request->student->name,
+                'classroom' => $request->student->classroom->name,
+                'timeLeft' => Calculation::timeLeft($attend->created_at),
+                'site' => $request->student->classroom->location->name,
             ],
-            'total' => $this->total(),
+            'total' => Calculation::total(),
         ]);
-    }
-
-    protected function timeLeft(Carbon $created): string
-    {
-        $lecture = cache()->remember('lecture', 3600, fn () => Lecture::query()
-            ->whereDate('date', now()->toDateString())
-            ->first()
-        );
-
-        return match (now()->greaterThan($lecture->home_time)) {
-            true => $lecture->home_time->timespan($created),
-            false => ($lecture->attend_time->greaterThan($created) ? ' ' : '- ').
-            $lecture->attend_time->timespan($created),
-        };
     }
 
     /**

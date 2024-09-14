@@ -12,6 +12,9 @@
     "This action is unauthorized.": "Tindakan ini tidak diizinkan.",
     "Custom options": "Opsi kustom",
     "Start": "Mulai",
+    "Stop": "Berhenti",
+    "Submit": "Kirim",
+    "Use Camera:": "Gunakan Kamera:",
     "qr": "qr",
     "Attendance successful": "Presensi berhasil",
     "Attendance failed": "Presensi gagal",
@@ -24,5 +27,8 @@
     "Attendance Summary": "Ringkasan Presensi",
     "Present": "Hadir",
     "Absent": "Tidak hadir",
-    "Synchronization successful!": "Sinkronisasi berhasil!"
+    "Synchronization successful!": "Sinkronisasi berhasil!",
+    "Site": "Kampus",
+    "QR invalid": "QR tidak valid",
+    "Not Found": "Tidak Ditemukan"
 }

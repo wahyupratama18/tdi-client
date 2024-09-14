@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use App\Enums\Parities;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Schedule extends Model
 {
@@ -17,10 +18,12 @@ class Schedule extends Model
         'parity',
     ];
 
-    public const PARITIES = [
-        1 => 'Ganjil',
-        2 => 'Genap',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'parity' => Parities::class,
+        ];
+    }
 
     /**
      * Get the semester that owns the Schedule
@@ -38,18 +41,16 @@ class Schedule extends Model
         return $this->HasMany(Classroom::class);
     }
 
+    public function students(): HasManyThrough
+    {
+        return $this->hasManyThrough(Student::class, Classroom::class);
+    }
+
     /**
      * Get all of the lectures for the Schedule
      */
     public function lectures(): HasMany
     {
         return $this->hasMany(Lecture::class);
-    }
-
-    public function remarks(): Attribute
-    {
-        return Attribute::make(
-            get: fn () => self::PARITIES[$this->parity],
-        );
     }
 }
