@@ -59,7 +59,7 @@
                                     }).then(response => {
                                         @if ($api)
                                         this.loop++
-                                        this.width = `${((this.loop) / this.loops.length)*100}%`
+                                        this.width = `${(((this.loop) / this.loops.length) * 100).toFixed(2)}%`
 
                                         if (this.loop < this.loops.length) {
                                             this.fetch{{ $sync->sync }}()
@@ -81,9 +81,13 @@
                                         @endif
 
                                         this.sync = response.data.sync
-
                                     }).catch(response => {
+                                        this.start = false;
                                         
+                                        iziToast.error({
+                                            message: response.response.data.message,
+                                            position: 'topRight'
+                                        })
                                     })
                                 },
                                 success(response) {
@@ -102,7 +106,7 @@
                                 <td class="px-12 py-4 text-sm font-medium whitespace-nowrap" x-text="sync"></td>
                                 <td class="px-12 py-4 text-sm font-medium whitespace-nowrap gap-4 grid">
                                     @if ($sync->authorized)
-                                    <x-button @click="startSync()" ::disabled="start">Sinkronisasi</x-button>
+                                    <x-button @click="startSync()" ::disabled="start">{{ __('Synchronize') }}</x-button>
                                     @endif
 
                                     @if ($api)

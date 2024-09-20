@@ -9,6 +9,10 @@ class SyncStudents extends Sync
 {
     protected function store(Collection $data): void
     {
+        if ($data->isEmpty()) {
+            return;
+        }
+        
         Student::query()->upsert(
             $data->toArray(),
             ['nim', 'qr'],
