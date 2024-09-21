@@ -23,25 +23,32 @@
                         site: '-',
                     },
                     submit() {
-                        if (this.scanned.length == 12) {
-                            axios.post('{{ route('attendance.store') }}', {
-                                qr: this.scanned,
-                            }).then(response => {
-                                console.log(response.data)
-                                this.scanned = ''
-                                this.total = response.data.total
-                                this.student = response.data.student
-                                this.status = response.data.status
-                            }).catch(response => {
-                                this.scanned = ''
-                                this.status = '{{ __('Not Found') }}'
-                            })
-                        } else {
-                            iziToast.error({
-                                message: '{{ __('QR invalid') }}',
-                                position: 'topRight'
-                            })
+                        if (this.processed.includes(this.scanned)) {
+                            this.status = '{{ __('Already scanned') }}'
+                            this.scanned = ''
+                            return;
                         }
+
+                        if (this.scanned.length != 12) {
+                            this.status = '{{ __('QR invalid') }}'
+                            this.scanned = ''
+                            return;
+                        }
+
+                        this.processed.push(this.scanned)
+                            
+                        axios.post('{{ route('attendance.store') }}', {
+                            qr: this.scanned,
+                        }).then(response => {
+                            this.scanned = ''
+
+                            this.total = response.data.total
+                            this.student = response.data.student
+                            this.status = response.data.status
+                        }).catch(response => {
+                            this.scanned = ''
+                            this.status = '{{ __('Not Found') }}'
+                        })
                     },
                     camLists() {
                         QrScanner.listCameras(true).then(cameras => {
