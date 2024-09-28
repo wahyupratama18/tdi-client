@@ -14,6 +14,7 @@
                     options: false,
                     cam: '',
                     status: null,
+                    processed: [],
                     total: {{ json_encode($total) }},
                     student: {
                         nim: '-',
